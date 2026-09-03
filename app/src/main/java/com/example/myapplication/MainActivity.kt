@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.padding(innerPadding),
                     color = Color(0xFFF3EFE0)
                 ) {
-                    Progresso()
+                    TelaCriacao()
                 }
             }
         }
