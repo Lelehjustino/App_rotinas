@@ -35,27 +35,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Scaffold() {
-                Surface(modifier = Modifier.padding(it)) {
-                    TelaRotina()
+            Scaffold(
+                containerColor = Color(0xFFF5F5F5)
+            ) { innerPadding ->
+                Surface(
+                    modifier = Modifier.padding(innerPadding),
+                    color = Color(0xFFF3EFE0)
+                ) {
+                    TelaListaRotinas()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-// @Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Greeting("Android")
     }
 }

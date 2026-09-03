@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.sp
 @Preview(showBackground = true)
 @Composable
 fun TelaRotina() {
-    val fundoBege = Color(0xFFF6F3E9)
+    val fundoBege = Color(0xFFF3EFE0)
 
     Column(
         modifier = Modifier.fillMaxSize().background(fundoBege).padding(20.dp),
@@ -54,7 +54,7 @@ fun TelaRotina() {
             Surface(
                 modifier = Modifier.size(40.dp).clickable { },
                 shape = CircleShape,
-                color = Color(0xFFE5DEC9)
+                color = fundoBege
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
@@ -90,9 +90,9 @@ fun TelaRotina() {
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            CardTarefa(titulo = "Meditação", descricao = "Tempo: 30 min", isConcluida = true)
-            CardTarefa(titulo = "Exercício", descricao = "Tempo: 30 min", isConcluida = true)
-            CardTarefa(titulo = "Café da manhã", descricao = "Tempo: 30 min", isConcluida = false)
+            CardTarefa(titulo = "Tarefa #1", descricao = "Tempo: 30 min", isConcluida = true)
+            CardTarefa(titulo = "Tarefa #2", descricao = "Tempo: 30 min", isConcluida = true)
+            CardTarefa(titulo = "Tarefa #3", descricao = "Tempo: 30 min", isConcluida = false)
         }
 
         // Botão Editar
