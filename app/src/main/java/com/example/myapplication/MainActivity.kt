@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                telaListaRotinas()
+                TelaListaRotinas()
             }
         }
     }
