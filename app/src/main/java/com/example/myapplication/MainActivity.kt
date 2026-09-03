@@ -35,8 +35,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
-                TelaListaRotinas()
+            Scaffold() {
+                Surface(modifier = Modifier.padding(it)) {
+                    TelaRotina()
+                }
             }
         }
     }

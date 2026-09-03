@@ -66,8 +66,9 @@ fun TelaListaRotinas() {
                 CardRotina("Rotina #4", "Tempo: 30 min")
             }
 
-            Botao("+ Nova rotina") {
-                // criar nova rotina
+            Botao(titulo = "+ Nova rotina") {
+                // Código executado no clique
+                println("Criar nova rotina clicado")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
