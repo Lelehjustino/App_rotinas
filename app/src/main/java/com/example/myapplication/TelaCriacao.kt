@@ -27,8 +27,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-data class Atividade(val nome: String, val duracao: String)
+import com.example.myapplication.ui.theme.Atividade
+import com.example.myapplication.ui.theme.Rotina
+import com.example.myapplication.ui.theme.listaAtividades as listaAtividadesGlobal
+import com.example.myapplication.ui.theme.listaRotinas as listaRotinasGlobal
 
 @Preview(showBackground = true)
 @Composable
@@ -44,7 +46,9 @@ fun TelaCriacao() {
     var fim by remember { mutableStateOf("09:00") }
     var nomeAtividade by remember { mutableStateOf("") }
     var duracaoAtividade by remember { mutableStateOf("") }
-    val atividades = remember { mutableStateListOf<Atividade>() }
+
+    // Lista local para exibição em tela
+    val listaAtividadesLocais = remember { mutableStateListOf<Atividade>() }
 
     Surface(modifier = Modifier.fillMaxSize(), color = begeFundo) {
         Column(
@@ -65,7 +69,7 @@ fun TelaCriacao() {
                 }
 
                 Text(
-                    text = nomeRotina.ifBlank { "Sem nome" },
+                    text = "Rotina: #${listaRotinasGlobal.size + 1}",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -73,11 +77,30 @@ fun TelaCriacao() {
 
                 Button(
                     onClick = {
-                        val msg = if (nomeRotina.isBlank())
-                            "Dê um nome à rotina"
-                        else
-                            "Rotina \"$nomeRotina\" salva com ${atividades.size} atividade(s)"
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        if (nomeRotina.isBlank()) {
+                            Toast.makeText(context, "Dê um nome à rotina", Toast.LENGTH_SHORT).show()
+                        } else {
+                            // Salva a rotina
+                            val tempoTotal = listaAtividadesLocais.sumOf { it.duracaoMinutos }
+                            val novaRotina = Rotina(
+                                idRotina = (listaRotinasGlobal.size + 1),
+                                nomeRotina = nomeRotina,
+                                tempoMinutosRotina = tempoTotal
+                            )
+                            listaRotinasGlobal.add(novaRotina)
+
+                            // Salva as atividades vinculando ao ID da rotina
+                            listaAtividadesLocais.forEach { atividade ->
+                                atividade.idRotina = novaRotina.idRotina
+                                listaAtividadesGlobal.add(atividade)
+                            }
+
+                            Toast.makeText(
+                                context,
+                                "Rotina \"$nomeRotina\" salva com ${listaAtividadesLocais.size} atividade(s)",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5252)),
                     shape = RoundedCornerShape(12.dp),
@@ -90,7 +113,7 @@ fun TelaCriacao() {
             Spacer(Modifier.height(16.dp))
 
             CampoTexto(
-                valor = nomeRotina,
+                valor = "Rotina: #${listaRotinasGlobal.size + 1}",
                 aoMudar = { nomeRotina = it },
                 placeholder = "Nome da rotina",
                 cor = verdeCampo
@@ -156,7 +179,13 @@ fun TelaCriacao() {
                         if (nomeAtividade.isBlank() || duracaoAtividade.isBlank()) {
                             Toast.makeText(context, "Preencha nome e duração", Toast.LENGTH_SHORT).show()
                         } else {
-                            atividades.add(Atividade(nomeAtividade, duracaoAtividade))
+                            val duracaoDouble = duracaoAtividade.toDoubleOrNull() ?: 0.0
+                            val novaAtividade = Atividade(
+                                idAtividade = listaAtividadesLocais.size + 1,
+                                nomeAtividade = nomeAtividade,
+                                duracaoMinutos = duracaoDouble
+                            )
+                            listaAtividadesLocais.add(novaAtividade)
                             Toast.makeText(context, "\"$nomeAtividade\" adicionada", Toast.LENGTH_SHORT).show()
                             nomeAtividade = ""
                             duracaoAtividade = ""
@@ -171,7 +200,7 @@ fun TelaCriacao() {
             Spacer(Modifier.height(16.dp))
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(atividades) { a ->
+                items(listaAtividadesLocais) { a ->
                     Row(
                         modifier = Modifier.fillMaxWidth().height(44.dp)
                             .background(Color(0xFFE2DDD0), RoundedCornerShape(12.dp))
@@ -179,8 +208,8 @@ fun TelaCriacao() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(a.nome, color = Color.Black, fontWeight = FontWeight.Bold)
-                        Text("${a.duracao} min", color = verdeTexto)
+                        Text(a.nomeAtividade, color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text("${a.duracaoMinutos.toInt()} min", color = verdeTexto)
                     }
                 }
             }

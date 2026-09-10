@@ -34,11 +34,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.ui.theme.Rotina
 
 @Preview(showBackground = true)
 @Composable
 fun TelaListaRotinas() {
     val begeFundo = Color(0xFFF3EFE0)
+    val listaRotinas = mutableListOf<Rotina>()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -60,10 +62,13 @@ fun TelaListaRotinas() {
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CardRotina("Rotina #1", "Tempo: 1h 30")
-                CardRotina("Rotina #2", "Tempo: 2h 10")
-                CardRotina("Rotina #3", "Tempo: 1h")
-                CardRotina("Rotina #4", "Tempo: 30 min")
+                for (rotina in listaRotinas) {
+                    // Exemplo formatando o tempo de minutos para horas/minutos, ou usando o valor direto
+                    CardRotina(
+                        titulo = rotina.nomeRotina,
+                        descricao = "${rotina.tempoMinutosRotina} min" // ajuste de acordo com como seu CardRotina espera o parâmetro
+                    )
+                }
             }
 
             Botao(titulo = "+ Nova rotina") {
