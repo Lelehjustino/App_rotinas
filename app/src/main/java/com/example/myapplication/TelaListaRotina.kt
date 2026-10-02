@@ -34,83 +34,166 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ui.theme.Rotina
 
 @Preview(showBackground = true)
 @Composable
 fun TelaListaRotinas() {
+
     val begeFundo = Color(0xFFF3EFE0)
+
     val listaRotinas = mutableListOf<Rotina>()
+
+    val navInterno = rememberNavController()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = begeFundo
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Gerenciador de tempo",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.padding(top = 16.dp, bottom = 24.dp)
-            )
 
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                for (rotina in listaRotinas) {
-                    // Exemplo formatando o tempo de minutos para horas/minutos, ou usando o valor direto
-                    CardRotina(
-                        titulo = rotina.nomeRotina,
-                        descricao = "${rotina.tempoMinutosRotina} min" // ajuste de acordo com como seu CardRotina espera o parâmetro
+        NavHost(
+            navController = navInterno,
+            startDestination = RotaAbas.TelaListaRotina,
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            composable(RotaAbas.TelaListaRotina) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Text(
+                        text = "Gerenciador de tempo",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier.padding(
+                            top = 16.dp,
+                            bottom = 24.dp
+                        )
+                    )
+
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+
+                        for (rotina in listaRotinas) {
+
+                            CardRotina(
+                                titulo = rotina.nomeRotina,
+                                descricao = "${rotina.tempoMinutosRotina} min"
+                            )
+                        }
+                    }
+
+                    Botao(
+                        titulo = "+ Nova rotina"
+                    ) {
+                        navInterno.navigate(RotaAbas.TelaCriacao)
+                    }
+
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+
+                    AppBar(
+                        selectedTab = 0,
+                        onTabSelected = { tab ->
+
+                            when (tab) {
+
+                                0 -> {
+                                    navInterno.navigate(
+                                        RotaAbas.TelaListaRotina
+                                    )
+                                }
+
+                                1 -> {
+                                    navInterno.navigate(
+                                        RotaAbas.Progresso
+                                    )
+                                }
+
+                                2 -> {
+                                    navInterno.navigate(
+                                        RotaAbas.TelaRotina
+                                    )
+                                }
+                            }
+                        }
                     )
                 }
             }
 
-            Botao(titulo = "+ Nova rotina") {
-                // Código executado no clique
-                println("Criar nova rotina clicado")
+            composable(RotaAbas.TelaCriacao) {
+
+                TelaCriacao()
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            composable(RotaAbas.Progresso) {
 
-            AppBar()
+                Progresso()
+            }
+
+            composable(RotaAbas.TelaRotina) {
+
+                TelaPerfil()
+            }
         }
     }
 }
+
 
 @Composable
 fun CardRotina(
     titulo: String,
     descricao: String
 ) {
+
     val vermelhoCard = Color(0xFFFF5252)
 
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = vermelhoCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = vermelhoCard
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
     ) {
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
+
             horizontalArrangement = Arrangement.SpaceBetween,
+
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             Column {
+
                 Text(
                     text = titulo,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+
+                Spacer(
+                    modifier = Modifier.height(4.dp)
+                )
+
                 Text(
                     text = descricao,
                     fontSize = 14.sp,
@@ -121,11 +204,21 @@ fun CardRotina(
             Surface(
                 modifier = Modifier
                     .size(32.dp)
-                    .clickable { },
+                    .clickable {
+                        // Remover rotina aqui
+                    },
+
                 shape = CircleShape,
-                color = Color.White.copy(alpha = 0.4f)
+
+                color = Color.White.copy(
+                    alpha = 0.4f
+                )
             ) {
-                Box(contentAlignment = Alignment.Center) {
+
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Remover",
@@ -138,21 +231,29 @@ fun CardRotina(
     }
 }
 
+
 @Composable
 fun Botao(
     titulo: String,
     acao: () -> Unit
 ) {
+
     val verdeBotao = Color(0xFF388E3C)
 
     Button(
         onClick = acao,
+
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
+
         shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = verdeBotao)
+
+        colors = ButtonDefaults.buttonColors(
+            containerColor = verdeBotao
+        )
     ) {
+
         Text(
             text = titulo,
             fontSize = 18.sp,
@@ -162,39 +263,55 @@ fun Botao(
     }
 }
 
+
 @Composable
 fun AppBar(
     selectedTab: Int = 0,
     onTabSelected: (Int) -> Unit = {}
 ) {
+
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+
         horizontalArrangement = Arrangement.SpaceAround,
+
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         NavItem(
             label = "Rotinas",
             icon = Icons.Default.Home,
             isSelected = selectedTab == 0,
-            onClick = { onTabSelected(0) },
+            onClick = {
+                onTabSelected(0)
+            },
             modifier = Modifier.weight(1f)
         )
+
         NavItem(
             label = "Progresso",
             icon = Icons.Default.List,
             isSelected = selectedTab == 1,
-            onClick = { onTabSelected(1) },
+            onClick = {
+                onTabSelected(1)
+            },
             modifier = Modifier.weight(1f)
         )
+
         NavItem(
             label = "Perfil",
             icon = Icons.Default.Person,
             isSelected = selectedTab == 2,
-            onClick = { onTabSelected(2) },
+            onClick = {
+                onTabSelected(2)
+            },
             modifier = Modifier.weight(1f)
         )
     }
 }
+
 
 @Composable
 private fun NavItem(
@@ -204,27 +321,44 @@ private fun NavItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     val activeColor = Color(0xFF388E3C)
     val inactiveColor = Color(0xFF8D8D8D)
-    val contentColor = if (isSelected) activeColor else inactiveColor
+
+    val contentColor =
+        if (isSelected) activeColor
+        else inactiveColor
 
     Column(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier.clickable(
+            onClick = onClick
+        ),
+
         horizontalAlignment = Alignment.CenterHorizontally,
+
         verticalArrangement = Arrangement.Center
     ) {
+
         Icon(
             imageVector = icon,
             contentDescription = label,
             tint = contentColor,
             modifier = Modifier.size(24.dp)
         )
-        Spacer(modifier = Modifier.height(4.dp))
+
+        Spacer(
+            modifier = Modifier.height(4.dp)
+        )
+
         Text(
             text = label,
             color = contentColor,
             fontSize = 12.sp,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+            fontWeight =
+                if (isSelected)
+                    FontWeight.Bold
+                else
+                    FontWeight.Normal
         )
     }
 }
