@@ -1,9 +1,7 @@
 package com.example.myapplication
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 
-@Preview(showBackground = true)
 @Composable
-fun TelaPerfil(navController: NavHostController) {}
+fun TelaMetas(navController: NavHostController) {}

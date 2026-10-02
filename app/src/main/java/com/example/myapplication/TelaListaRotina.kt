@@ -34,122 +34,64 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import com.example.myapplication.ui.theme.Rotina
 
-@Preview(showBackground = true)
 @Composable
-fun TelaListaRotinas() {
+fun TelaListaRotinas(navController: NavHostController) {
 
     val begeFundo = Color(0xFFF3EFE0)
 
+    // Por enquanto, lista vazia
     val listaRotinas = mutableListOf<Rotina>()
-
-    val navInterno = rememberNavController()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = begeFundo
     ) {
 
-        NavHost(
-            navController = navInterno,
-            startDestination = RotaAbas.TelaListaRotina,
-            modifier = Modifier.fillMaxSize()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            composable(RotaAbas.TelaListaRotina) {
+            Text(
+                text = "Gerenciador de tempo",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(
+                    top = 16.dp,
+                    bottom = 24.dp
+                )
+            )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
 
-                    Text(
-                        text = "Gerenciador de tempo",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        modifier = Modifier.padding(
-                            top = 16.dp,
-                            bottom = 24.dp
-                        )
-                    )
+                for (rotina in listaRotinas) {
 
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-
-                        for (rotina in listaRotinas) {
-
-                            CardRotina(
-                                titulo = rotina.nomeRotina,
-                                descricao = "${rotina.tempoMinutosRotina} min"
-                            )
-                        }
-                    }
-
-                    Botao(
-                        titulo = "+ Nova rotina"
-                    ) {
-                        navInterno.navigate(RotaAbas.TelaCriacao)
-                    }
-
-                    Spacer(
-                        modifier = Modifier.height(16.dp)
-                    )
-
-                    AppBar(
-                        selectedTab = 0,
-                        onTabSelected = { tab ->
-
-                            when (tab) {
-
-                                0 -> {
-                                    navInterno.navigate(
-                                        RotaAbas.TelaListaRotina
-                                    )
-                                }
-
-                                1 -> {
-                                    navInterno.navigate(
-                                        RotaAbas.Progresso
-                                    )
-                                }
-
-                                2 -> {
-                                    navInterno.navigate(
-                                        RotaAbas.TelaRotina
-                                    )
-                                }
-                            }
-                        }
+                    CardRotina(
+                        titulo = rotina.nomeRotina,
+                        descricao = "${rotina.tempoMinutosRotina} min"
                     )
                 }
             }
 
-            composable(RotaAbas.TelaCriacao) {
-
-                TelaCriacao()
-            }
-
-            composable(RotaAbas.Progresso) {
-
-                Progresso()
-            }
-
-            composable(RotaAbas.TelaRotina) {
-
-                TelaPerfil()
+            Botao(
+                titulo = "+ Nova rotina"
+            ) {
+                // Aqui depois vamos abrir a tela de criação
+                navController.navigate(RotaAbas.TelaCriacao)
             }
         }
     }
 }
+
 
 
 @Composable

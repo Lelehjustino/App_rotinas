@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.myapplication.ui.theme.Atividade
 import com.example.myapplication.ui.theme.Rotina
 import com.example.myapplication.ui.theme.listaAtividades as listaAtividadesGlobal
@@ -34,7 +35,7 @@ import com.example.myapplication.ui.theme.listaRotinas as listaRotinasGlobal
 
 @Preview(showBackground = true)
 @Composable
-fun TelaCriacao() {
+fun TelaCriacao(navController: NavHostController) {
     val begeFundo = Color(0xFFF3EFE0)
     val verdeCampo = Color(0xFF38B560)
     val verdeTexto = Color(0xFF7D8C7A)

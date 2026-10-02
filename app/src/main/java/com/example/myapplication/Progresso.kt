@@ -38,77 +38,175 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 
-@Preview(showBackground = true)
+
+// ============================================================
+// NAVEGAÇÃO PRINCIPAL
+// ============================================================
+
 @Composable
-fun Progresso() {
+fun AppNavegacao() {
+
+    val navController = rememberNavController()
+
     Scaffold(
-        containerColor = Color(0xFFF3EFE0), // Fundo bege da tela
-        bottomBar = { BarraNavegacao() }
+        modifier = Modifier.fillMaxSize(),
+        containerColor = Color(0xFFF3EFE0),
+
+        bottomBar = {
+            BarraNavegacao(navController)
+        }
+
     ) { innerPadding ->
-        Column(
+
+        ```kotlin
+        NavHost(
+            navController = navController,
+            startDestination = RotaAbas.TelaListaRotina,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 20.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
 
-            // Título
-            Text(
-                text = "Seu progresso",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1E1E1E)
-            )
+            // Tela inicial
+            composable(RotaAbas.TelaListaRotina) {
+                TelaListaRotinas(navController)
+            }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            // Progresso
+            composable(RotaAbas.Progresso) {
+                Progresso(navController)
+            }
 
-            // Card 1: Nível e XP
-            CardNivel()
+            // Perfil
+            composable(RotaAbas.TelaPerfil) {
+                TelaPerfil(navController)
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // Criar nova rotina
+            composable(RotaAbas.TelaCriacao) {
+                TelaCriacao(navController)
+            }
 
-            // Card 2: Acompanhe suas métricas
-            CardMetricas()
+            // Detalhes da rotina
+            composable(RotaAbas.TelaRotina) {
+                TelaRotina(navController)
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // Histórico
+            composable(RotaAbas.TelaHistorico) {
+                TelaHistorico(navController)
+            }
 
-            // Card 3: Atividade em Grid (10 semanas)
-            CardAtividadeGrid()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Spacer(modifier = Modifier.height(20.dp))
+            // Metas
+            composable(RotaAbas.TelaMetas) {
+                TelaMetas(navController)
+            }
         }
     }
 }
 
+
+// TELA DE PROGRESSO
+
+@Composable
+fun Progresso(navController: NavHostController) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF3EFE0))
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp),
+
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        Text(
+            text = "Seu progresso",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1E1E1E)
+        )
+
+        Spacer(
+            modifier = Modifier.height(20.dp)
+        )
+
+        CardNivel()
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        CardMetricas()
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        CardAtividadeGrid()
+
+        Spacer(
+            modifier = Modifier.height(20.dp)
+        )
+    }
+}
+
+
+// ============================================================
+// CARD NÍVEL
+// ============================================================
+
 @Composable
 fun CardNivel() {
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         color = Color.White
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = Color(0xFFFFF3E0),
                     modifier = Modifier.size(44.dp)
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(text = "🔥", fontSize = 20.sp)
+
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Text(
+                            text = "🔥",
+                            fontSize = 20.sp
+                        )
                     }
                 }
-                Spacer(modifier = Modifier.width(12.dp))
+
+                Spacer(
+                    modifier = Modifier.width(12.dp)
+                )
+
                 Text(
                     text = "Nível 10",
                     fontSize = 18.sp,
@@ -116,20 +214,25 @@ fun CardNivel() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
 
-            // Barra de Progresso
             LinearProgressIndicator(
                 progress = { 0.72f },
+
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(10.dp)
                     .clip(CircleShape),
+
                 color = Color(0xFF4CAF50),
-                trackColor = Color(0xFFE0E0E0),
+                trackColor = Color(0xFFE0E0E0)
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
 
             Text(
                 text = "720 / 1000 XP",
@@ -137,68 +240,110 @@ fun CardNivel() {
                 color = Color.Gray
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
 
-            // Botões Salvar e Compartilhar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
+
                 Button(
                     onClick = { },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEFEBE0)),
+
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFEFEBE0)
+                    ),
+
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier.height(36.dp)
                 ) {
+
                     Icon(
                         imageVector = Icons.Default.Share,
                         contentDescription = "Salvar",
                         tint = Color.Black,
                         modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Salvar", color = Color.Black, fontSize = 13.sp)
+
+                    Spacer(
+                        modifier = Modifier.width(4.dp)
+                    )
+
+                    Text(
+                        text = "Salvar",
+                        color = Color.Black,
+                        fontSize = 13.sp
+                    )
                 }
 
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(
+                    modifier = Modifier.width(8.dp)
+                )
 
                 Button(
                     onClick = { },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEFEBE0)),
+
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFEFEBE0)
+                    ),
+
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier.height(36.dp)
                 ) {
+
                     Icon(
                         imageVector = Icons.Default.Share,
                         contentDescription = "Compartilhar",
                         tint = Color.Black,
                         modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Compartilhar", color = Color.Black, fontSize = 13.sp)
+
+                    Spacer(
+                        modifier = Modifier.width(4.dp)
+                    )
+
+                    Text(
+                        text = "Compartilhar",
+                        color = Color.Black,
+                        fontSize = 13.sp
+                    )
                 }
             }
         }
     }
 }
 
+
+// ============================================================
+// CARD MÉTRICAS
+// ============================================================
+
 @Composable
 fun CardMetricas() {
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         color = Color.White
     ) {
+
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = Color(0xFFE3F2FD),
                 modifier = Modifier.size(44.dp)
             ) {
-                Box(contentAlignment = Alignment.Center) {
+
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+
                     Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = null,
@@ -206,7 +351,11 @@ fun CardMetricas() {
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(16.dp))
+
+            Spacer(
+                modifier = Modifier.width(16.dp)
+            )
+
             Text(
                 text = "Acompanhe suas métricas",
                 fontSize = 16.sp,
@@ -216,14 +365,24 @@ fun CardMetricas() {
     }
 }
 
+
+// ============================================================
+// CARD ATIVIDADE
+// ============================================================
+
 @Composable
 fun CardAtividadeGrid() {
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         color = Color.White
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
             Text(
                 text = "ATIVIDADE — ÚLTIMAS 10 SEMANAS",
                 fontSize = 12.sp,
@@ -231,9 +390,10 @@ fun CardAtividadeGrid() {
                 color = Color.Gray
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
 
-            // Grade de Atividade (7 linhas x 10 colunas)
             val tonsVerde = listOf(
                 Color(0xFFF0F0F0),
                 Color(0xFFC8E6C9),
@@ -242,110 +402,197 @@ fun CardAtividadeGrid() {
                 Color(0xFF2E7D32)
             )
 
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+
                 repeat(7) {
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        repeat(10) { col ->
+
+                        repeat(10) {
+
                             val nivelColor = (0..4).random()
+
                             Box(
                                 modifier = Modifier
                                     .size(24.dp)
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(tonsVerde[nivelColor])
+                                    .clip(
+                                        RoundedCornerShape(4.dp)
+                                    )
+                                    .background(
+                                        tonsVerde[nivelColor]
+                                    )
                             )
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
 
-            // Legenda Menos -> Mais
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Menos", fontSize = 11.sp, color = Color.Gray)
-                Spacer(modifier = Modifier.width(4.dp))
+
+                Text(
+                    text = "Menos",
+                    fontSize = 11.sp,
+                    color = Color.Gray
+                )
+
+                Spacer(
+                    modifier = Modifier.width(4.dp)
+                )
+
                 tonsVerde.forEach { color ->
+
                     Box(
                         modifier = Modifier
                             .size(10.dp)
-                            .clip(RoundedCornerShape(2.dp))
+                            .clip(
+                                RoundedCornerShape(2.dp)
+                            )
                             .background(color)
                     )
-                    Spacer(modifier = Modifier.width(3.dp))
+
+                    Spacer(
+                        modifier = Modifier.width(3.dp)
+                    )
                 }
-                Text(text = "Mais", fontSize = 11.sp, color = Color.Gray)
+
+                Text(
+                    text = "Mais",
+                    fontSize = 11.sp,
+                    color = Color.Gray
+                )
             }
         }
     }
 }
 
-@Composable
-fun CardGraficoTarefas() {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        color = Color.White
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "TAREFAS CONCLUÍDAS POR SEMANA",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Gray
-            )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Espaço reservado para o gráfico
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .background(Color(0xFFF9F9F9), shape = RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("📈 Área do Gráfico", color = Color(0xFF4CAF50), fontSize = 14.sp)
-            }
-        }
-    }
-}
+// ============================================================
+// BARRA DE NAVEGAÇÃO
+// ============================================================
 
 @Composable
-fun BarraNavegacao() {
+fun BarraNavegacao(
+    navInterno: NavHostController
+) {
+
+    val rotaAtual =
+        navInterno.currentBackStackEntryAsState()
+            .value
+            ?.destination
+            ?.route
+
     NavigationBar(
+        modifier = Modifier.fillMaxWidth(),
         containerColor = Color(0xFFF3EFE0)
     ) {
+
         NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Icon(Icons.Default.Home, contentDescription = "Rotinas") },
-            label = { Text("Rotinas") },
-            colors = NavigationBarItemDefaults.colors(unselectedTextColor = Color.Gray)
-        )
-        NavigationBarItem(
-            selected = true,
-            onClick = { },
-            icon = { Icon(Icons.Default.List, contentDescription = "Rotinas") },
-            label = { Text("Progresso") },
+            selected = rotaAtual == RotaAbas.TelaListaRotina,
+
+            onClick = {
+                navInterno.navigate(RotaAbas.TelaListaRotina) {
+                    popUpTo(RotaAbas.TelaListaRotina) {
+                        inclusive = false
+                    }
+                    launchSingleTop = true
+                }
+            },
+
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Rotinas"
+                )
+            },
+
+            label = {
+                Text("Rotinas")
+            },
+
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFF4CAF50),
                 selectedTextColor = Color(0xFF4CAF50),
+                unselectedIconColor = Color.Gray,
+                unselectedTextColor = Color.Gray,
                 indicatorColor = Color.Transparent
             )
         )
+
         NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Icon(Icons.Default.Person, contentDescription = "Perfil") },
-            label = { Text("Perfil") },
-            colors = NavigationBarItemDefaults.colors(unselectedTextColor = Color.Gray)
+            selected = rotaAtual == RotaAbas.Progresso,
+
+            onClick = {
+                navInterno.navigate(RotaAbas.Progresso) {
+                    popUpTo(RotaAbas.TelaListaRotina) {
+                        inclusive = false
+                    }
+                    launchSingleTop = true
+                }
+            },
+
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.List,
+                    contentDescription = "Progresso"
+                )
+            },
+
+            label = {
+                Text("Progresso")
+            },
+
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color(0xFF4CAF50),
+                selectedTextColor = Color(0xFF4CAF50),
+                unselectedIconColor = Color.Gray,
+                unselectedTextColor = Color.Gray,
+                indicatorColor = Color.Transparent
+            )
+        )
+
+        NavigationBarItem(
+            selected = rotaAtual == RotaAbas.TelaPerfil,
+
+            onClick = {
+                navInterno.navigate(RotaAbas.TelaPerfil) {
+                    popUpTo(RotaAbas.TelaListaRotina) {
+                        inclusive = false
+                    }
+                    launchSingleTop = true
+                }
+            },
+
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Perfil"
+                )
+            },
+
+            label = {
+                Text("Perfil")
+            },
+
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color(0xFF4CAF50),
+                selectedTextColor = Color(0xFF4CAF50),
+                unselectedIconColor = Color.Gray,
+                unselectedTextColor = Color.Gray,
+                indicatorColor = Color.Transparent
+            )
         )
     }
 }
