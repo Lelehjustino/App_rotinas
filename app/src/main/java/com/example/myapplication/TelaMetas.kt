@@ -2,7 +2,6 @@ package com.example.myapplication
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,14 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,9 +25,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,12 +52,17 @@ fun TelaMetas(
         mutableStateOf(false)
     }
 
+    val total = viewModel.metas.size
+
+    val concluidas = viewModel.metas.count {
+        it.concluida
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF3EFE0))
-            .verticalScroll(rememberScrollState())
-            .padding(20.dp)
+            .padding(horizontal = 20.dp)
     ) {
 
         // ----------------------------------------------------
@@ -67,7 +70,9 @@ fun TelaMetas(
         // ----------------------------------------------------
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
@@ -95,110 +100,99 @@ fun TelaMetas(
         )
 
         // ----------------------------------------------------
-        // RESUMO
+        // LISTA
         // ----------------------------------------------------
 
-        val total = viewModel.metas.size
-
-        val concluidas = viewModel.metas.count {
-            it.concluida
-        }
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            Column(
-                modifier = Modifier.padding(20.dp)
-            ) {
+            // RESUMO
+            item {
 
-                Text(
-                    text = "$concluidas de $total metas concluídas",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    )
+                ) {
 
-                Spacer(
-                    modifier = Modifier.height(8.dp)
-                )
+                    Column(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
 
-                Text(
-                    text = "Continue avançando!",
-                    color = Color.Gray,
-                    fontSize = 14.sp
+                        Text(
+                            text = "$concluidas de $total metas concluídas",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(
+                            modifier = Modifier.height(8.dp)
+                        )
+
+                        Text(
+                            text = "Continue avançando!",
+                            color = Color.Gray,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+
+            // BOTÃO NOVA META
+            item {
+
+                Button(
+                    onClick = {
+                        mostrarDialogo = true
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF388E3C)
+                    )
+                ) {
+
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null
+                    )
+
+                    Spacer(
+                        modifier = Modifier.size(8.dp)
+                    )
+
+                    Text(
+                        text = "Nova meta",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            // METAS
+            items(viewModel.metas) { meta ->
+
+                CardMeta(
+                    meta = meta,
+                    onCheck = {
+                        viewModel.alternarMeta(meta)
+                    },
+                    onDelete = {
+                        viewModel.removerMeta(meta)
+                    }
                 )
             }
-        }
-
-        Spacer(
-            modifier = Modifier.height(20.dp)
-        )
-
-        // ----------------------------------------------------
-        // BOTÃO NOVA META
-        // ----------------------------------------------------
-
-        Button(
-            onClick = {
-                mostrarDialogo = true
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF388E3C)
-            )
-        ) {
-
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null
-            )
-
-            Spacer(
-                modifier = Modifier.size(8.dp)
-            )
-
-            Text(
-                text = "Nova meta",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Spacer(
-            modifier = Modifier.height(20.dp)
-        )
-
-        // ----------------------------------------------------
-        // LISTA DE METAS
-        // ----------------------------------------------------
-
-        viewModel.metas.forEach { meta ->
-
-            CardMeta(
-                meta = meta,
-                onCheck = {
-                    viewModel.alternarMeta(meta)
-                },
-                onDelete = {
-                    viewModel.removerMeta(meta)
-                }
-            )
-
-            Spacer(
-                modifier = Modifier.height(12.dp)
-            )
         }
     }
 
     // --------------------------------------------------------
-    // DIALOGO
+    // DIALOGO NOVA META
     // --------------------------------------------------------
 
     if (mostrarDialogo) {
@@ -360,6 +354,7 @@ fun DialogoNovaMeta(
                 onClick = {
 
                     if (nome.isNotBlank()) {
+
                         onConfirm(
                             nome,
                             descricao
