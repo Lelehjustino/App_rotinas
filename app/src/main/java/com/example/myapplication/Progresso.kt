@@ -157,14 +157,16 @@ fun Progresso(navController: NavHostController) {
         CardMetricas()
 
         Spacer(
+            modifier = Modifier.height(8.dp)
+        )
+
+        // CardAtividadeGrid()
+
+        Spacer(
             modifier = Modifier.height(16.dp)
         )
 
-        CardAtividadeGrid()
-
-        Spacer(
-            modifier = Modifier.height(20.dp)
-        )
+        CardMetasHistorico(navController)
     }
 }
 
@@ -598,5 +600,94 @@ fun BarraNavegacao(
                 indicatorColor = Color.Transparent
             )
         )
+    }
+}
+
+// ============================================================
+// CARD METAS E HISTÓRICO
+// ============================================================
+
+@Composable
+fun CardMetasHistorico(
+    navController: NavHostController
+) {
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        color = Color.White
+    ) {
+
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
+            Text(
+                text = "Acompanhe sua jornada",
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1E1E1E)
+            )
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+
+            Text(
+                text = "Consulte suas metas e veja seu histórico.",
+                fontSize = 13.sp,
+                color = Color.Gray
+            )
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                Button(
+                    onClick = {
+                        navController.navigate(RotaAbas.TelaMetas)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(52.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFE8F5E9)
+                    )
+                ) {
+
+                    Text(
+                        text = "Metas",
+                        color = Color(0xFF388E3C),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        navController.navigate(RotaAbas.TelaHistorico)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(52.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFE3F2FD)
+                    )
+                ) {
+
+                    Text(
+                        text = "Histórico",
+                        color = Color(0xFF1976D2),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
     }
 }
