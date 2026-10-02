@@ -15,4 +15,6 @@ object RotaAbas {
     const val TelaMetas = "TelaMetas"
 
     const val TelaPerfil = "TelaPerfil"
+
+    const val TelaPerfilCont = "TelaPerfilCont"
 }

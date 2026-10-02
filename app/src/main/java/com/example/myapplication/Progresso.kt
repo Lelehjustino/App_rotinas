@@ -66,7 +66,6 @@ fun AppNavegacao() {
 
     ) { innerPadding ->
 
-        ```kotlin
         NavHost(
             navController = navController,
             startDestination = RotaAbas.TelaListaRotina,
@@ -108,6 +107,11 @@ fun AppNavegacao() {
             // Metas
             composable(RotaAbas.TelaMetas) {
                 TelaMetas(navController)
+            }
+
+            // Perfil cont
+            composable(RotaAbas.TelaPerfilCont) {
+                TelaPerfilCont(navController)
             }
         }
     }
